@@ -1,0 +1,199 @@
+{
+  "project_name": "Arduino Communication LabVIEW 2015",
+  "vi_name": "Arduino_Communication.vi",
+  "version": "15.0",
+  "author": "Student Project",
+  "created_date": "2025-12-06",
+  "front_panel": {
+    "controls": [
+      {
+        "name": "Port COM",
+        "type": "String Control",
+        "default_value": "COM3",
+        "description": "Port série de communication"
+      },
+      {
+        "name": "Baud Rate",
+        "type": "Numeric Control (I32)",
+        "default_value": 9600,
+        "description": "Vitesse de communication"
+      },
+      {
+        "name": "LED ON",
+        "type": "Boolean Button",
+        "mechanical_action": "Latch When Released",
+        "description": "Bouton pour allumer la LED"
+      },
+      {
+        "name": "LED OFF",
+        "type": "Boolean Button",
+        "mechanical_action": "Latch When Released",
+        "description": "Bouton pour éteindre la LED"
+      },
+      {
+        "name": "Lire Capteur",
+        "type": "Boolean Button",
+        "mechanical_action": "Latch When Released",
+        "description": "Bouton pour lire le capteur"
+      },
+      {
+        "name": "Obtenir Statut",
+        "type": "Boolean Button",
+        "mechanical_action": "Latch When Released",
+        "description": "Bouton pour obtenir le statut complet"
+      },
+      {
+        "name": "Stop",
+        "type": "Stop Button",
+        "mechanical_action": "Latch When Released",
+        "description": "Arrêter le VI"
+      }
+    ],
+    "indicators": [
+      {
+        "name": "État LED",
+        "type": "String Indicator",
+        "description": "Affiche l'état de la LED"
+      },
+      {
+        "name": "Valeur Capteur",
+        "type": "Numeric Indicator (I32)",
+        "range": "0-1023",
+        "description": "Valeur du capteur analogique"
+      },
+      {
+        "name": "Graph Capteur",
+        "type": "Waveform Chart",
+        "history": 100,
+        "description": "Affichage temps réel du capteur"
+      },
+      {
+        "name": "Messages",
+        "type": "String Indicator",
+        "display_style": "Scrolling",
+        "description": "Log des communications"
+      },
+      {
+        "name": "Connecté",
+        "type": "LED (Boolean Indicator)",
+        "description": "Indicateur de connexion"
+      },
+      {
+        "name": "Error Out",
+        "type": "Error Cluster",
+        "description": "Affichage des erreurs"
+      }
+    ]
+  },
+  "block_diagram": {
+    "initialization": [
+      {
+        "function": "VISA Configure Serial Port",
+        "palette": "Instrument I/O → Serial",
+        "inputs": {
+          "VISA resource name": "Port COM control",
+          "baud rate": 9600,
+          "data bits": 8,
+          "parity": 0,
+          "stop bits": 10,
+          "flow control": 0,
+          "timeout": 1000
+        },
+        "outputs": [
+          "VISA session out",
+          "error out"
+        ]
+      }
+    ],
+    "main_loop": {
+      "type": "While Loop",
+      "condition": "NOT Stop Button",
+      "timeout": 100,
+      "event_structure": [
+        {
+          "event": "LED ON - Value Change",
+          "actions": [
+            "Send 'L1\\n' via VISA Write",
+            "Wait 50ms",
+            "Read response via VISA Read (256 bytes)",
+            "Display in État LED indicator"
+          ]
+        },
+        {
+          "event": "LED OFF - Value Change",
+          "actions": [
+            "Send 'L0\\n' via VISA Write",
+            "Wait 50ms",
+            "Read response via VISA Read (256 bytes)",
+            "Display in État LED indicator"
+          ]
+        },
+        {
+          "event": "Lire Capteur - Value Change",
+          "actions": [
+            "Send 'R\\n' via VISA Write",
+            "Wait 50ms",
+            "Read response via VISA Read (256 bytes)",
+            "Match Pattern 'SENSOR:'",
+            "Scan From String '%d'",
+            "Display in Valeur Capteur indicator",
+            "Update Graph"
+          ]
+        },
+        {
+          "event": "Obtenir Statut - Value Change",
+          "actions": [
+            "Send 'S\\n' via VISA Write",
+            "Wait 50ms",
+            "Read response via VISA Read (256 bytes)",
+            "Parse STATUS message",
+            "Update all indicators"
+          ]
+        },
+        {
+          "event": "Timeout: 100ms",
+          "actions": [
+            "Continue loop"
+          ]
+        }
+      ]
+    },
+    "cleanup": [
+      {
+        "function": "VISA Close",
+        "inputs": [
+          "VISA session"
+        ],
+        "description": "Fermer la connexion série"
+      },
+      {
+        "function": "Simple Error Handler",
+        "inputs": [
+          "error in"
+        ],
+        "description": "Gérer les erreurs"
+      }
+    ]
+  },
+  "communication_protocol": {
+    "commands": {
+      "L1": "Allumer LED",
+      "L0": "Éteindre LED",
+      "R": "Lire capteur",
+      "S": "Obtenir statut"
+    },
+    "responses": {
+      "LED:ON": "LED allumée",
+      "LED:OFF": "LED éteinte",
+      "SENSOR:xxx": "Valeur capteur (0-1023)",
+      "STATUS:LED=x,SENSOR=yyy": "Statut complet"
+    }
+  },
+  "serial_configuration": {
+    "baud_rate": 9600,
+    "data_bits": 8,
+    "stop_bits": 1,
+    "parity": "None",
+    "flow_control": "None"
+  }
+}

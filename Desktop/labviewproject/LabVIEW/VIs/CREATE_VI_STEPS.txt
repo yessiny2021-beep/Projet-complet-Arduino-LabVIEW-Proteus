@@ -1,0 +1,187 @@
+================================================================================
+  ÉTAPES DE CRÉATION DU VI ARDUINO_COMMUNICATION.VI
+  LabVIEW 2015
+================================================================================
+
+📋 ÉTAPE 1 : CRÉER LE PROJET
+--------------------------------------------------------------------------------
+1. Lancez LabVIEW 2015
+2. File → New VI (Ctrl+N)
+3. File → Save As...
+   - Nom : Arduino_Communication.vi
+   - Emplacement : LabVIEW/VIs/
+
+🎨 ÉTAPE 2 : FACE-AVANT (FRONT PANEL)
+--------------------------------------------------------------------------------
+A. CONTRÔLES :
+
+1. Port COM
+   Type : String Control
+   Valeur par défaut : COM3
+   → Port série de communication
+
+2. Baud Rate
+   Type : Numeric Control (I32)
+   Valeur par défaut : 9600
+   → Vitesse de communication
+
+3. LED ON
+   Type : Boolean Button
+   Mechanical Action : Latch When Released
+   → Bouton pour allumer la LED
+
+4. LED OFF
+   Type : Boolean Button
+   Mechanical Action : Latch When Released
+   → Bouton pour éteindre la LED
+
+5. Lire Capteur
+   Type : Boolean Button
+   Mechanical Action : Latch When Released
+   → Bouton pour lire le capteur
+
+6. Obtenir Statut
+   Type : Boolean Button
+   Mechanical Action : Latch When Released
+   → Bouton pour obtenir le statut complet
+
+7. Stop
+   Type : Stop Button
+   Mechanical Action : Latch When Released
+   → Arrêter le VI
+
+B. INDICATEURS :
+
+1. État LED
+   Type : String Indicator
+   → Affiche l'état de la LED
+
+2. Valeur Capteur
+   Type : Numeric Indicator (I32)
+   Range : 0-1023
+   → Valeur du capteur analogique
+
+3. Graph Capteur
+   Type : Waveform Chart
+   History : 100 points
+   → Affichage temps réel du capteur
+
+4. Messages
+   Type : String Indicator
+   → Log des communications
+
+5. Connecté
+   Type : LED (Boolean Indicator)
+   → Indicateur de connexion
+
+6. Error Out
+   Type : Error Cluster
+   → Affichage des erreurs
+
+🔧 ÉTAPE 3 : DIAGRAMME DE BLOCS (BLOCK DIAGRAM)
+--------------------------------------------------------------------------------
+
+A. INITIALISATION (Avant la boucle) :
+
+📍 VISA Configure Serial Port
+   Palette : Instrument I/O → Serial
+   Entrées :
+     - VISA resource name : Port COM control
+     - baud rate : 9600
+     - data bits : 8
+     - parity : 0
+     - stop bits : 10
+     - flow control : 0
+     - timeout : 1000
+   Sorties : VISA session out, error out
+
+B. BOUCLE PRINCIPALE (While Loop) :
+
+   Type : While Loop
+   Condition : NOT Stop Button
+   Timeout : 100 ms
+
+   EVENT STRUCTURE :
+
+   📌 LED ON - Value Change
+      • Send 'L1\n' via VISA Write
+      • Wait 50ms
+      • Read response via VISA Read (256 bytes)
+      • Display in État LED indicator
+
+   📌 LED OFF - Value Change
+      • Send 'L0\n' via VISA Write
+      • Wait 50ms
+      • Read response via VISA Read (256 bytes)
+      • Display in État LED indicator
+
+   📌 Lire Capteur - Value Change
+      • Send 'R\n' via VISA Write
+      • Wait 50ms
+      • Read response via VISA Read (256 bytes)
+      • Match Pattern 'SENSOR:'
+      • Scan From String '%d'
+      • Display in Valeur Capteur indicator
+      • Update Graph
+
+   📌 Obtenir Statut - Value Change
+      • Send 'S\n' via VISA Write
+      • Wait 50ms
+      • Read response via VISA Read (256 bytes)
+      • Parse STATUS message
+      • Update all indicators
+
+   📌 Timeout: 100ms
+      • Continue loop
+
+C. NETTOYAGE (Après la boucle) :
+
+📍 VISA Close
+   Entrées : VISA session
+   → Fermer la connexion série
+
+📍 Simple Error Handler
+   Entrées : error in
+   → Gérer les erreurs
+
+⚙️ ÉTAPE 4 : CONFIGURATION SÉRIE
+--------------------------------------------------------------------------------
+  Baud Rate: 9600
+  Data Bits: 8
+  Stop Bits: 1
+  Parity: None
+  Flow Control: None
+
+📡 ÉTAPE 5 : PROTOCOLE DE COMMUNICATION
+--------------------------------------------------------------------------------
+COMMANDES :
+  L1 → Allumer LED
+  L0 → Éteindre LED
+  R → Lire capteur
+  S → Obtenir statut
+
+RÉPONSES :
+  LED:ON → LED allumée
+  LED:OFF → LED éteinte
+  SENSOR:xxx → Valeur capteur (0-1023)
+  STATUS:LED=x,SENSOR=yyy → Statut complet
+
+✅ ÉTAPE 6 : TEST
+--------------------------------------------------------------------------------
+1. Connectez Arduino ou lancez Proteus
+2. Sélectionnez le bon port COM
+3. Exécutez le VI (Run)
+4. Testez chaque bouton
+5. Vérifiez les valeurs affichées
+
+📸 ÉTAPE 7 : CAPTURES D'ÉCRAN
+--------------------------------------------------------------------------------
+1. File → Print Window (Ctrl+P)
+2. Format : PNG
+3. Sauvegarder :
+   - Front Panel : Arduino_Communication_Front.png
+   - Block Diagram : Arduino_Communication_Block.png
+
+================================================================================
+  FIN DES INSTRUCTIONS
+================================================================================
