@@ -1,370 +1,140 @@
-# 🎉 BIENVENUE DANS LE PROJET !
+# 🎓 Bienvenue dans le Projet Arduino - LabVIEW 2015
 
-## Mini-projet LabVIEW 2GII - Communication Arduino-LabVIEW
+## 📋 Aperçu du Projet
 
----
+Ce projet éducatif vous permet d'apprendre la communication série entre Arduino et LabVIEW 2015 en créant un système de contrôle et de surveillance.
 
-## 👋 Bonjour et bienvenue !
+## 🎯 Objectifs Pédagogiques
 
-Vous venez de recevoir un **projet complet et clé en main** pour réaliser votre mini-projet de LabVIEW.
+- Comprendre la communication série UART
+- Maîtriser l'interface LabVIEW 2015
+- Utiliser Proteus 8.9 pour la simulation
+- Développer un système embarqué complet
 
----
+## 🚀 Par où commencer ?
 
-## ✨ Ce que contient ce projet
+### Option 1 : Démarrage Rapide (Recommandé)
 
-### 💻 Code prêt à l'emploi
-- ✅ Code Arduino complet et testé (4.8 KB)
-- ✅ Communication série bidirectionnelle
-- ✅ Gestion de 3 capteurs et 5 actionneurs
-- ✅ Protocole de communication robuste
+Consultez [QUICK_START.md](QUICK_START.md) pour une mise en route rapide.
 
-### 📚 Documentation exhaustive
-- ✅ **~170 KB de documentation** en français
-- ✅ **16 fichiers** couvrant tous les aspects
-- ✅ Guides pas à pas pour Proteus et LabVIEW
-- ✅ **15+ problèmes résolus** dans le guide de dépannage
-- ✅ Checklist complète de validation
+### Option 2 : Guide Complet
 
-### 🎯 Tout ce dont vous avez besoin
-- ✅ Instructions détaillées
-- ✅ Schémas et diagrammes
-- ✅ Exemples d'utilisation
-- ✅ Tests de validation
-- ✅ Guide de soumission
+Suivez les étapes détaillées :
 
----
+1. **Installation** → [INSTALL_PROTEUS.md](INSTALL_PROTEUS.md)
+2. **Compilation Arduino** → [Documentation/COMPILATION_HEX.md](Documentation/COMPILATION_HEX.md)
+3. **Simulation Proteus** → [Proteus/INSTRUCTIONS_PROTEUS.md](Proteus/INSTRUCTIONS_PROTEUS.md)
+4. **Interface LabVIEW** → [LabVIEW/INSTRUCTIONS_LABVIEW.md](LabVIEW/INSTRUCTIONS_LABVIEW.md)
 
-## 🚀 PAR OÙ COMMENCER ?
+## 📦 Prérequis
 
-### Option 1 : Lecture rapide (10 minutes)
+### Logiciels Requis
+
+- ✅ **LabVIEW 2015** (obligatoire)
+- ✅ **Proteus 8.9** (pour simulation)
+- ✅ **Arduino IDE** (pour compilation)
+- ✅ **Git** (pour versioning)
+
+### Connaissances Recommandées
+
+- Bases en programmation C/C++
+- Notions d'électronique numérique
+- Familiarité avec les interfaces graphiques
+
+## 📂 Structure du Projet
+
 ```
-1. 📄 README.md          (5 min)  - Vue d'ensemble
-2. 🚀 QUICK_START.md     (5 min)  - Démarrage rapide
-```
-
-### Option 2 : Démarrage complet (30 minutes)
-```
-1. 📄 README.md          (5 min)  - Vue d'ensemble
-2. 🎨 GUIDE_VISUEL.md    (10 min) - Schémas
-3. 📚 GUIDE_COMPLET.md   (15 min) - Installation
-```
-
-### Option 3 : Développement (étape par étape)
-```
-1. 📄 README.md                   - Introduction
-2. 💻 Arduino/.ino                - Comprendre le code
-3. 📖 Proteus/INSTRUCTIONS        - Créer le schéma
-4. 📖 LabVIEW/INSTRUCTIONS        - Créer l'interface
-5. 📋 CHECKLIST_SOUMISSION.md     - Valider
+labviewproject/
+├── 📁 Arduino/          → Code embarqué
+├── 📁 LabVIEW/          → Interface utilisateur
+├── 📁 Proteus/          → Simulation
+├── 📁 Documentation/    → Guides détaillés
+└── 📁 bin/              → Outils (arduino-cli)
 ```
 
----
+## 🛠️ Installation Rapide
 
-## 📖 GUIDE DE NAVIGATION RAPIDE
+```bash
+# 1. Rendre les scripts exécutables
+chmod +x *.sh
 
-### 🆘 J'ai besoin d'aide !
-- **Problème ?** → `Documentation/TROUBLESHOOTING.md`
-- **Protocole ?** → `Documentation/PROTOCOLE_COMMUNICATION.md`
-- **Navigation ?** → `INDEX.md`
+# 2. Installer les dépendances
+./install_dependencies.sh
 
-### 💡 Je veux comprendre
-- **Architecture ?** → `GUIDE_VISUEL.md`
-- **Utilisation ?** → `Documentation/GUIDE_COMPLET.md`
-- **Protocole ?** → `Documentation/PROTOCOLE_COMMUNICATION.md`
+# 3. Vérifier le système
+./check_system.sh
 
-### 🔧 Je veux développer
-- **Arduino ?** → `Arduino/arduino_labview_communication.ino`
-- **Proteus ?** → `Proteus/INSTRUCTIONS_PROTEUS.md`
-- **LabVIEW ?** → `LabVIEW/INSTRUCTIONS_LABVIEW.md`
+# 4. Compiler le projet
+./run_project.sh
+```
 
-### ✅ Je prépare la remise
-- **Checklist ?** → `CHECKLIST_SOUMISSION.md`
-- **Validation ?** → `GUIDE_COMPLET.md`
-- **Livrables ?** → `README.md` (section Livrables)
+## 📖 Documentation Disponible
 
----
+| Document | Description |
+|----------|-------------|
+| [README.md](README.md) | Vue d'ensemble du projet |
+| [QUICK_START.md](QUICK_START.md) | Démarrage rapide |
+| [RUN_GUIDE.md](RUN_GUIDE.md) | Guide d'exécution |
+| [GUIDE_COMPLET.md](Documentation/GUIDE_COMPLET.md) | Documentation complète |
+| [TROUBLESHOOTING.md](Documentation/TROUBLESHOOTING.md) | Dépannage |
 
-## 🎯 VOS OBJECTIFS
+## 🎥 Ressources Multimédias
 
-### Ce que vous allez apprendre
-1. ✅ Programmation Arduino
-2. ✅ Simulation avec Proteus
-3. ✅ Développement LabVIEW
-4. ✅ Communication série
-5. ✅ Intégration de systèmes
+- [Guide Visuel](GUIDE_VISUEL.md) - Captures d'écran étape par étape
+- [Guide Vidéo](GUIDE_VIDEO.md) - Tutoriels vidéo
 
-### Ce que vous allez créer
-1. 🔧 Fichier `.hex` (compilation Arduino)
-2. 🔌 Schéma Proteus complet
-3. 🖥️ Interface LabVIEW fonctionnelle
-4. 📡 Système de communication bidirectionnelle
-5. 📚 Documentation de votre projet
+## ⚙️ Configuration Minimale
 
----
+### Système d'Exploitation
+- Linux (Ubuntu 20.04+)
+- Windows 10/11
+- macOS (avec Wine pour Proteus)
 
-## ⏱️ PLANNING RECOMMANDÉ
+### Matériel
+- 4 GB RAM minimum (8 GB recommandé)
+- 10 GB espace disque
+- Port USB disponible
 
-### Semaine 1 : Préparation (3-4h)
-- [ ] Lire README.md et GUIDE_COMPLET.md
-- [ ] Installer les logiciels
-- [ ] Compiler le code Arduino
-- [ ] Tester la compilation
+## 🎓 Pour les Enseignants
 
-### Semaine 2 : Proteus (4-5h)
-- [ ] Lire INSTRUCTIONS_PROTEUS.md
-- [ ] Créer le schéma
-- [ ] Charger le .hex
-- [ ] Tester la simulation
-
-### Semaine 3 : LabVIEW (5-6h)
-- [ ] Lire INSTRUCTIONS_LABVIEW.md
-- [ ] Créer le Front Panel
-- [ ] Créer le Block Diagram
-- [ ] Tester la communication
-
-### Semaine 4 : Finalisation (3-4h)
-- [ ] Tests complets
-- [ ] Validation avec CHECKLIST_SOUMISSION.md
-- [ ] Captures d'écran
-- [ ] Préparation ZIP de soumission
-
-**Total :** 15-19 heures
-
----
-
-## 💪 POINTS FORTS DE CE PROJET
-
-### ✅ Documentation exceptionnelle
-- **~170 KB** de documentation
-- Couvre **100%** des aspects du projet
-- **15+ problèmes** déjà résolus
-- Exemples concrets
-
-### ✅ Code de qualité
-- Arduino testé et fonctionnel
-- Commentaires détaillés
-- Structure modulaire
-- Gestion d'erreurs
-
-### ✅ Support complet
-- Guide de dépannage exhaustif
-- Checklist de validation
+Consultez [POUR_ENSEIGNANT.md](POUR_ENSEIGNANT.md) pour :
+- Objectifs pédagogiques détaillés
+- Grilles d'évaluation
+- Variantes du projet
 - Ressources supplémentaires
-- FAQ intégrée
+
+## 🐛 Problèmes Courants
+
+### LabVIEW ne trouve pas le port série
+→ Vérifiez les permissions : `sudo chmod 666 /dev/ttyUSB0`
+
+### Proteus ne charge pas le fichier .hex
+→ Vérifiez que le fichier existe dans `Arduino/arduino_labview_communication/`
+
+### Erreurs de compilation Arduino
+→ Exécutez : `./install_arduino_library.sh`
+
+Pour plus de détails : [TROUBLESHOOTING.md](Documentation/TROUBLESHOOTING.md)
+
+## 📝 Soumission du Projet
+
+Avant de soumettre, consultez :
+- [CHECKLIST_SOUMISSION.md](CHECKLIST_SOUMISSION.md) - Liste de vérification
+- [GITHUB_PUSH_GUIDE.md](GITHUB_PUSH_GUIDE.md) - Guide de versioning
+
+## 🤝 Support
+
+Pour toute question :
+1. Consultez la [documentation](Documentation/GUIDE_COMPLET.md)
+2. Vérifiez le [dépannage](Documentation/TROUBLESHOOTING.md)
+3. Contactez votre enseignant
+
+## 📄 Licence
+
+Projet éducatif - Libre d'utilisation pour l'enseignement et l'apprentissage.
 
 ---
 
-## ⚠️ POINTS D'ATTENTION
+**Bonne chance avec votre projet ! 🚀**
 
-### Ne pas sauter ces étapes !
-1. ❗ **Lire le README.md** en premier
-2. ❗ **Installer tous les logiciels** avant de commencer
-3. ❗ **Tester progressivement** (Arduino → Proteus → LabVIEW)
-4. ❗ **Utiliser la CHECKLIST** tout au long du projet
-
-### Pièges courants à éviter
-- ❌ Négliger la configuration des ports virtuels
-- ❌ Oublier de compiler le .hex
-- ❌ Ignorer le Baud Rate (doit être 9600 partout)
-- ❌ Sauvegarder LabVIEW dans une version > 2021
-
----
-
-## 🎓 CONSEILS DE RÉUSSITE
-
-### 1. Soyez méthodique
-```
-Étape par étape
-Tester à chaque étape
-Ne pas tout faire d'un coup
-```
-
-### 2. Utilisez la documentation
-```
-Lire avant de coder
-Consulter en cas de doute
-Vérifier avec la checklist
-```
-
-### 3. Testez régulièrement
-```
-Arduino → Compile
-Proteus → Simulation fonctionne
-LabVIEW → Communication OK
-Ensemble → Validation complète
-```
-
-### 4. Demandez de l'aide
-```
-Documentation d'abord
-TROUBLESHOOTING.md ensuite
-Enseignant si bloqué
-```
-
----
-
-## 📊 VOS CHANCES DE RÉUSSITE
-
-### Avec cette documentation
-- ✅ **95%** si vous suivez les instructions
-- ✅ **100%** si vous utilisez la checklist
-- ✅ **Excellente note** si vous comprenez le code
-
-### Sans cette documentation
-- ⚠️ **60%** (temps perdu, erreurs fréquentes)
-- ⚠️ **Stress élevé**
-- ⚠️ **Résultat incertain**
-
-**→ Utilisez la documentation, c'est votre meilleur atout ! 📚**
-
----
-
-## 🏆 CRITÈRES D'ÉVALUATION (ANTICIPATION)
-
-### Fonctionnalités (40%)
-- Communication bidirectionnelle ✅
-- Capteurs fonctionnels ✅
-- Actionneurs fonctionnels ✅
-- Gestion d'erreurs ✅
-
-### Qualité technique (30%)
-- Code propre ✅
-- Schéma organisé ✅
-- Interface ergonomique ✅
-- Protocole respecté ✅
-
-### Documentation (20%)
-- README complet ✅
-- Instructions claires ✅
-- Captures d'écran ✅
-- Commentaires ✅
-
-### Présentation (10%)
-- Organisation ✅
-- Respect consignes ✅
-- Professionnalisme ✅
-
-**→ Tout est déjà prévu dans ce projet ! ✨**
-
----
-
-## 🎁 BONUS INCLUS
-
-### Documentation exhaustive
-- 📄 README.md - Guide principal
-- 📑 INDEX.md - Navigation
-- 🚀 QUICK_START.md - Démarrage rapide
-- 🎨 GUIDE_VISUEL.md - Schémas
-- 📋 CHECKLIST_SOUMISSION.md - Validation
-- 👨‍🏫 POUR_ENSEIGNANT.md - Grille d'évaluation
-
-### Guides spécialisés
-- 📚 GUIDE_COMPLET.md - Manuel utilisateur
-- 📡 PROTOCOLE_COMMUNICATION.md - Spécifications
-- 🛠️ TROUBLESHOOTING.md - Dépannage (15+ problèmes)
-- ⚙️ COMPILATION_HEX.md - Compilation Arduino
-
-### Templates et références
-- 🗺️ BLOCK_DIAGRAM_TEMPLATE.md - Template LabVIEW
-- 📖 INSTRUCTIONS_LABVIEW.md - Guide LabVIEW
-- 📖 INSTRUCTIONS_PROTEUS.md - Guide Proteus
-- 📚 COMPOSANTS_REFERENCE.md - Référence composants
-
----
-
-## 🚀 PRÊT À COMMENCER ?
-
-### Votre première action
-```
-1. Ouvrir README.md
-2. Lire la section "Guide de démarrage rapide"
-3. Suivre les étapes
-4. Profiter du voyage ! 🎉
-```
-
-### En cas de blocage
-```
-1. TROUBLESHOOTING.md (solutions)
-2. INDEX.md (navigation)
-3. GUIDE_VISUEL.md (schémas)
-4. Contacter l'enseignant
-```
-
----
-
-## 💬 MESSAGE DE L'ÉQUIPE
-
-> **"Ce projet a été conçu avec soin pour vous garantir la réussite.**  
-> **Chaque document a été pensé pour répondre à vos questions.**  
-> **Chaque exemple a été testé pour vous guider.**  
-> **Vous avez entre les mains un projet clé en main.**  
-> **Maintenant, c'est à vous de jouer ! 🚀"**
-
----
-
-## ✅ CHECKLIST DE DÉPART
-
-Avant de commencer, assurez-vous que :
-- [ ] Vous avez **lu ce message** en entier
-- [ ] Vous avez **ouvert README.md**
-- [ ] Vous comprenez la **structure du projet**
-- [ ] Vous savez **où trouver l'aide**
-- [ ] Vous êtes **motivé** et **prêt** ! 💪
-
----
-
-## 🎯 OBJECTIF FINAL
-
-À la fin de ce projet, vous aurez :
-- ✅ Un système complet fonctionnel
-- ✅ Des compétences en Arduino, Proteus et LabVIEW
-- ✅ Une excellente note (si vous suivez les instructions)
-- ✅ De la fierté d'avoir réussi un projet d'intégration complet
-- ✅ Des compétences réutilisables dans votre carrière
-
----
-
-## 🌟 DERNIERS MOTS
-
-**Ce projet est une opportunité d'apprendre, de créer et de réussir.**
-
-**La documentation est là pour vous.**  
-**Le code est prêt.**  
-**Les instructions sont claires.**
-
-**Il ne manque qu'une chose : VOUS ! 💪**
-
----
-
-## 📞 RESSOURCES
-
-**Documentation locale :**
-- Tout dans ce projet
-- 16 fichiers à votre disposition
-- ~170 KB d'aide
-
-**Ressources externes :**
-- Arduino : https://www.arduino.cc/
-- LabVIEW : https://www.ni.com/
-- Proteus : https://www.labcenter.com/
-
-**Support :**
-- Votre enseignant
-- Forums en ligne
-- Communautés Arduino/LabVIEW
-
----
-
-## 🎊 BON COURAGE ET BONNE RÉUSSITE !
-
-**Commencez maintenant par ouvrir README.md** 📄
-
-**Vous allez réussir ! 🏆**
-
----
-
-*Message de bienvenue - Version 1.0*  
-*Projet LabVIEW 2GII - 17 Novembre 2025*  
-*Communication Arduino-LabVIEW*
-
-**→ Première étape : Ouvrir README.md 📄**
+Commencez par [QUICK_START.md](QUICK_START.md) pour une mise en route rapide.

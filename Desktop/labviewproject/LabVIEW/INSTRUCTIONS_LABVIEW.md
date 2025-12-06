@@ -1,356 +1,281 @@
-# Instructions LabVIEW - Interface de Communication Arduino
+# Instructions LabVIEW 2015
 
-## Description du VI (Virtual Instrument)
+## Configuration Initiale
 
-Ce VI LabVIEW permet de :
-- Se connecter au port série (Arduino via Proteus)
-- Recevoir les données des capteurs en temps réel
-- Afficher les données dans des indicateurs graphiques
-- Envoyer des commandes pour contrôler les actionneurs
-- Gérer l'état de la communication
+### 1. Vérification de la Version
 
-## Architecture du VI
+Ce projet nécessite **LabVIEW 2015** (version 15.0 ou supérieure).
 
-### Face-avant (Front Panel)
+Pour vérifier votre version :
+1. Ouvrez LabVIEW
+2. Allez dans **Help → About LabVIEW**
+3. Vérifiez que la version est 2015 ou ultérieure
 
-#### Section 1 : Configuration de la communication
-- **Control: "Port COM"** - Ring/Combo Box pour sélectionner le port
-  - Type: Ring
-  - Valeurs: COM1, COM2, COM3, ..., COM20
-  
-- **Button: "Connecter"** - Bouton pour établir la connexion
-  - Type: Boolean Button
-  
-- **Button: "Déconnecter"** - Bouton pour fermer la connexion
-  - Type: Boolean Button
-  
-- **Indicator: "État Connexion"** - LED indiquant l'état de connexion
-  - Type: LED Boolean Indicator
-  - Vert: Connecté, Éteint: Déconnecté
+### 2. Modules Requis
 
-#### Section 2 : Affichage des capteurs (Données reçues)
-- **Indicator: "Température (°C)"** - Thermomètre ou jauge
-  - Type: Meter ou Thermometer
-  - Range: 0 à 100°C
-  
-- **Indicator: "Potentiomètre"** - Jauge ou slide
-  - Type: Vertical Slide Indicator
-  - Range: 0 à 1023
-  
-- **Indicator: "Bouton"** - LED
-  - Type: Round LED
-  - Rouge: Pressé, Vert: Relâché
-  
-- **Chart: "Graphique Température"** - Graphique temps réel
-  - Type: Waveform Chart
-  - Points: 100 dernières valeurs
+- **NI-VISA** : Pour la communication série
+- **LabVIEW Runtime Engine 2015** (minimum)
 
-#### Section 3 : Contrôle des actionneurs (Commandes envoyées)
-- **Control: "LED Rouge"** - Curseur
-  - Type: Vertical Slider
-  - Range: 0 à 255
-  
-- **Control: "LED Verte"** - Curseur
-  - Type: Vertical Slider
-  - Range: 0 à 255
-  
-- **Control: "LED Bleue"** - Curseur
-  - Type: Vertical Slider
-  - Range: 0 à 255
-  
-- **Button: "Envoyer RGB"** - Bouton d'envoi
-  - Type: Boolean Button
-  
-- **Control: "Position Servo"** - Curseur rotatif
-  - Type: Knob ou Dial
-  - Range: 0 à 180°
-  
-- **Button: "Déplacer Servo"** - Bouton d'envoi
-  - Type: Boolean Button
-  
-- **Control: "Buzzer ON/OFF"** - Interrupteur
-  - Type: Toggle Switch
-  
-#### Section 4 : Monitoring
-- **Indicator: "Messages reçus"** - Zone de texte
-  - Type: String Indicator
-  - Scrollbar: Oui
-  
-- **Indicator: "Erreurs"** - Zone de texte
-  - Type: String Indicator
-  - Couleur: Rouge
+## Création du VI Principal
 
-- **Button: "STOP"** - Bouton d'arrêt principal
-  - Type: Stop Button (icône)
-  - Couleur: Rouge
+### Étape 1 : Nouveau Projet
 
-### Diagramme (Block Diagram)
+1. Lancez LabVIEW 2015
+2. Fichier → **New VI** (Ctrl+N)
+3. Sauvegardez le VI : `Arduino_Communication.vi`
 
-#### Structure principale : While Loop
-La boucle principale contient toute la logique du programme.
+### Étape 2 : Face-Avant (Front Panel)
 
-#### Séquence d'initialisation
+Ajoutez les contrôles suivants :
 
-**1. Configuration VISA**
+#### Contrôles
+
+1. **Port Série** (String Control)
+   - Label : "Port COM"
+   - Valeur par défaut : "COM3" (Windows) ou "/dev/ttyUSB0" (Linux)
+
+2. **Baud Rate** (Numeric Control)
+   - Type : I32
+   - Valeur par défaut : 9600
+
+3. **Boutons de Contrôle**
+   - **LED ON** : Boolean Button
+   - **LED OFF** : Boolean Button
+   - **Lire Capteur** : Boolean Button
+   - **Obtenir Statut** : Boolean Button
+
+4. **Bouton Stop** (Boolean)
+   - Type : Stop Button
+   - Mechanical Action : Latch When Released
+
+#### Indicateurs
+
+1. **État LED** (String Indicator)
+   - Label : "État de la LED"
+
+2. **Valeur Capteur** (Numeric Indicator)
+   - Type : I32
+   - Label : "Valeur du Capteur"
+   - Range : 0 à 1023
+
+3. **Messages** (String Indicator)
+   - Label : "Messages Reçus"
+   - Display Style : Scrolling
+
+4. **Indicateur d'Erreur** (Error Cluster)
+
+### Étape 3 : Diagramme de Blocs (Block Diagram)
+
+#### Structure Principale : While Loop
+
+1. Créez une **While Loop** pour la boucle principale
+2. Connectez le bouton **Stop** à la condition d'arrêt
+
+#### Configuration VISA
+
+##### 1. VISA Configure Serial Port
+
 ```
-Blocs nécessaires:
-- VISA Configure Serial Port
-  - Port: (depuis control "Port COM")
-  - Baud Rate: 9600
-  - Data Bits: 8
-  - Parity: None (0)
-  - Stop Bits: 10 (1 stop bit)
-  - Flow Control: None (0)
-  
-- Error Handler (case structure)
-  - Si erreur: afficher message
-  - Si OK: activer LED "État Connexion"
+Palette : Instrument I/O → Serial → VISA Configure Serial Port
 ```
 
-**2. Boucle principale de lecture**
-```
-Condition: Bouton STOP non pressé
+Configuration :
+- **VISA resource name** : Port COM (depuis le contrôle)
+- **baud rate** : 9600
+- **data bits** : 8
+- **parity** : 0 (none)
+- **stop bits** : 10 (1 bit)
+- **flow control** : 0 (none)
 
-À chaque itération (Wait: 100ms):
-  
-  A. Lecture des données série (VISA Read)
-     - Bytes to Read: 100
-     - Termination Char: \n (0x0A)
-     - Timeout: 1000ms
-  
-  B. Parsing des données reçues
-     - Format attendu: "T:25.5,P:512,B:1\n"
-     - Utiliser "Scan From String" ou "Match Pattern"
-     - Extraire: température, potValue, buttonState
-  
-  C. Mise à jour des indicateurs
-     - Température → Thermomètre + Chart
-     - Potentiomètre → Slide Indicator
-     - Bouton → LED
-  
-  D. Vérification des commandes à envoyer
-     - Détection changement sur contrôles
-     - Event Structure ou Property Nodes
-  
-  E. Envoi des commandes (VISA Write)
-     - Si "Envoyer RGB" pressé:
-       Format: "LED:R,G,B\n"
-       Exemple: "LED:255,128,0\n"
-     
-     - Si "Déplacer Servo" pressé:
-       Format: "SERVO:angle\n"
-       Exemple: "SERVO:90\n"
-     
-     - Si "Buzzer" changé:
-       Format: "BUZZER:state\n"
-       Exemple: "BUZZER:1\n"
-  
-  F. Gestion des erreurs
-     - Case structure sur error cluster
-     - Log des erreurs dans indicator
+##### 2. Structure Case
+
+Créez une **Case Structure** avec les cas suivants :
+
+**Cas 1 : LED ON**
+```
+VISA Write → Envoyer "L1\n"
+VISA Read → Lire la réponse
+Afficher dans "État LED"
 ```
 
-**3. Séquence de fermeture**
+**Cas 2 : LED OFF**
 ```
-Après sortie de la boucle:
-- VISA Close (fermer la ressource série)
-- Clear Error
-- Message de confirmation
-```
-
-## Guide de création pas à pas
-
-### Étape 1 : Créer un nouveau VI
-1. Ouvrir LabVIEW
-2. File → New VI
-3. Sauvegarder comme "Arduino_Communication.vi"
-
-### Étape 2 : Créer la face-avant
-1. Passer en mode Front Panel (Ctrl+E pour basculer)
-2. Ajouter les contrôles et indicateurs selon la liste ci-dessus
-3. Organiser visuellement par sections
-4. Ajouter des labels descriptifs
-
-### Étape 3 : Programmer le diagramme
-
-#### A. Structure While Loop
-1. Block Diagram → Structures → While Loop
-2. Tracer une grande boucle englobant tout
-3. Connecter le bouton STOP à la condition d'arrêt
-
-#### B. Initialisation VISA
-```
-Blocs à placer (dans l'ordre):
-1. VISA Resource Name (constant) ou Control
-2. VISA Configure Serial Port
-   - Configuration: 9600, 8, N, 1
-3. Case Structure pour gestion erreur
+VISA Write → Envoyer "L0\n"
+VISA Read → Lire la réponse
+Afficher dans "État LED"
 ```
 
-#### C. Lecture série
+**Cas 3 : Lire Capteur**
 ```
-Dans la boucle While:
-1. VISA Read
-   - Byte Count: 100
-   - Termination Char Enabled: True (\n)
-2. String To Number (ou Scan From String)
-   - Format: "%f,%d,%d"
-3. Unbundle pour séparer les valeurs
-4. Connecter aux indicateurs
+VISA Write → Envoyer "R\n"
+VISA Read → Lire la réponse "SENSOR:xxxx"
+Extraire la valeur numérique
+Afficher dans "Valeur Capteur"
 ```
 
-#### D. Envoi de commandes
+**Cas 4 : Obtenir Statut**
 ```
-Event Structure (recommandé) ou Property Nodes:
-1. Event: "Envoyer RGB" - Value Change
-   - Concatenate Strings: "LED:", R, ",", G, ",", B, "\n"
-   - VISA Write
-   
-2. Event: "Déplacer Servo" - Value Change
-   - Concatenate Strings: "SERVO:", angle, "\n"
-   - VISA Write
-   
-3. Event: "Buzzer" - Value Change
-   - Concatenate Strings: "BUZZER:", state, "\n"
-   - VISA Write
+VISA Write → Envoyer "S\n"
+VISA Read → Lire la réponse complète
+Parser et afficher les données
 ```
 
-#### E. Fermeture
+#### Traitement des Données
+
+##### Extraction de la Valeur du Capteur
+
+1. Utilisez **Match Pattern** pour extraire les chiffres
+   - Pattern : "SENSOR:"
+   - Extraire la substring après le pattern
+
+2. Convertissez avec **Scan From String**
+   - Format : "%d"
+   - Type de sortie : I32
+
+##### Gestion des Erreurs
+
+1. Ajoutez un **Simple Error Handler**
+2. Connectez tous les clusters d'erreur VISA
+3. Affichez les erreurs dans l'indicateur d'erreur
+
+### Étape 4 : Temporisation
+
+Ajoutez un **Wait (ms)** dans la boucle principale :
+- Valeur : 100 ms (pour éviter une surcharge CPU)
+
+### Étape 5 : Fermeture VISA
+
+Après la While Loop :
+1. Ajoutez **VISA Close**
+2. Connectez la référence VISA
+
+## Diagramme de Blocs Simplifié
+
 ```
-Après la boucle:
-1. VISA Close
-2. Simple Error Handler
-```
-
-### Étape 4 : Configuration des propriétés
-
-#### Pour les graphiques
-- Waveform Chart:
-  - Right-click → Properties
-  - Scales: X-Axis (temps), Y-Axis (0-100)
-  - History Length: 100
-  - Update Mode: Strip Chart
-
-#### Pour les contrôles
-- Sliders:
-  - Range: 0-255 (RGB) ou 0-180 (Servo)
-  - Mechanical Action: Switch When Released
-
-#### Pour les boutons
-- Connecter/Déconnecter:
-  - Mechanical Action: Latch When Released
-  
-### Étape 5 : Test et debug
-1. Connecter au port virtuel (ex: COM11)
-2. Lancer la simulation Proteus
-3. Exécuter le VI (Run button ou Ctrl+R)
-4. Vérifier la réception des données
-5. Tester l'envoi de commandes
-
-## Fonctions VISA à utiliser
-
-### Configuration
-- **VISA Configure Serial Port.vi**
-  - Palette: Instrument I/O → Serial → VISA
-
-### Lecture/Écriture
-- **VISA Read.vi**
-  - Palette: Instrument I/O → Serial → VISA
-  
-- **VISA Write.vi**
-  - Palette: Instrument I/O → Serial → VISA
-
-### Gestion
-- **VISA Close.vi**
-  - Palette: Instrument I/O → Serial → VISA
-
-### String Processing
-- **Scan From String.vi**
-  - Palette: Programming → String
-  
-- **Match Pattern.vi**
-  - Palette: Programming → String
-
-- **Concatenate Strings.vi**
-  - Palette: Programming → String
-
-### Conversion
-- **Number To String.vi**
-  - Palette: Programming → String
-
-- **String To Number.vi**
-  - Palette: Programming → String
-
-## Format des messages
-
-### Données reçues de l'Arduino
-```
-Format: "T:25.5,P:512,B:1\n"
-
-Où:
-- T: Température en °C (float)
-- P: Valeur potentiomètre (0-1023)
-- B: État bouton (0 ou 1)
+┌─────────────────────────────────────────────────────────┐
+│               WHILE LOOP (Until Stop)                   │
+│                                                          │
+│  ┌────────────────────────────────────────────┐        │
+│  │    VISA Configure Serial Port               │        │
+│  │    - Port: Port COM Control                 │        │
+│  │    - Baud: 9600                             │        │
+│  └────────────────────────────────────────────┘        │
+│                      ↓                                   │
+│  ┌────────────────────────────────────────────┐        │
+│  │         CASE STRUCTURE                      │        │
+│  │  Case 0: LED ON  → VISA Write "L1"         │        │
+│  │  Case 1: LED OFF → VISA Write "L0"         │        │
+│  │  Case 2: Read    → VISA Write "R"          │        │
+│  │  Case 3: Status  → VISA Write "S"          │        │
+│  └────────────────────────────────────────────┘        │
+│                      ↓                                   │
+│  ┌────────────────────────────────────────────┐        │
+│  │         VISA Read (256 bytes)               │        │
+│  └────────────────────────────────────────────┘        │
+│                      ↓                                   │
+│  ┌────────────────────────────────────────────┐        │
+│  │    Parse Response & Update Indicators       │        │
+│  └────────────────────────────────────────────┘        │
+│                      ↓                                   │
+│  ┌────────────────────────────────────────────┐        │
+│  │         Wait 100 ms                         │        │
+│  └────────────────────────────────────────────┘        │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+           ┌────────────────────────┐
+           │    VISA Close           │
+           └────────────────────────┘
 ```
 
-### Commandes envoyées à l'Arduino
-```
-LED RGB:     "LED:255,128,0\n"    (R,G,B entre 0-255)
-Servo:       "SERVO:90\n"         (angle entre 0-180)
-Buzzer:      "BUZZER:1\n"         (0=OFF, 1=ON)
-Status:      "STATUS\n"           (demande status complet)
-```
+## Configuration du Port Série
 
-### Réponses de l'Arduino
-```
-Accusé de réception:
-"ACK:LED\n"
-"ACK:SERVO\n"
-"ACK:BUZZER\n"
+### Windows
 
-Status complet:
-"STATUS:LED(255,128,0),SERVO(90),TEMP(25.5),POT(512),BTN(1)\n"
-```
+1. Ouvrez le **Gestionnaire de périphériques**
+2. Trouvez le port COM de l'Arduino (ex: COM3, COM4)
+3. Utilisez ce nom dans LabVIEW
 
-## Amélioration avancées (optionnelles)
+### Linux
 
-### 1. Event Structure complète
-- Gérer les événements UI de manière asynchrone
-- Producer-Consumer pattern
+1. Terminal : `ls /dev/ttyUSB* /dev/ttyACM*`
+2. Trouvez le port (ex: /dev/ttyUSB0)
+3. Donnez les permissions : `sudo chmod 666 /dev/ttyUSB0`
 
-### 2. Queue Message Pattern
-- Séparer la lecture série de l'envoi de commandes
-- Files d'attente pour les commandes
+## Test du VI
 
-### 3. State Machine
-- États: Idle, Connected, Reading, Writing, Error
-- Transitions entre états
+### 1. Connexion
 
-### 4. Logging
-- Enregistrer les données dans un fichier
-- TDMS file ou CSV
+1. Connectez l'Arduino ou lancez la simulation Proteus
+2. Sélectionnez le bon port COM
+3. Exécutez le VI (Run)
 
-### 5. Graphiques multiples
-- XY Graph pour corrélations
-- Intensity Graph pour heatmap
+### 2. Test des Commandes
 
-## Compatibilité LabVIEW 2021
+1. Cliquez sur **LED ON** → Vérifiez que l'indicateur affiche "LED:ON"
+2. Cliquez sur **LED OFF** → Vérifiez que l'indicateur affiche "LED:OFF"
+3. Cliquez sur **Lire Capteur** → Vérifiez la valeur (0-1023)
+4. Cliquez sur **Obtenir Statut** → Vérifiez le statut complet
 
-Assurez-vous de :
-- Utiliser les VIs natifs (pas de VIs tiers)
-- Éviter les fonctions récentes (post-2021)
-- Sauvegarder en version 2021 ou antérieure
-- Tester sur LabVIEW 2021 avant soumission
+### 3. Arrêt
 
-## Checklist avant soumission
+1. Cliquez sur le bouton **Stop**
+2. Le VI ferme automatiquement la connexion VISA
 
-- [ ] VI s'ouvre correctement dans LabVIEW 2021
-- [ ] Tous les contrôles et indicateurs sont visibles
-- [ ] La connexion série fonctionne
-- [ ] Les données sont reçues et affichées correctement
-- [ ] Les commandes sont envoyées correctement
-- [ ] Gestion des erreurs implémentée
-- [ ] Bouton STOP fonctionne
-- [ ] VI se ferme proprement
-- [ ] Documentation intégrée (descriptions des contrôles)
-- [ ] VI organisé et commenté
+## Améliorations Possibles
+
+### Fonctionnalités Avancées
+
+1. **Graph en Temps Réel**
+   - Ajoutez un Waveform Chart
+   - Affichez l'évolution du capteur
+
+2. **Enregistrement des Données**
+   - Utilisez "Write to Spreadsheet File"
+   - Sauvegardez les valeurs dans un fichier CSV
+
+3. **Alarmes**
+   - Ajoutez des seuils pour le capteur
+   - Déclenchez des alertes visuelles/sonores
+
+4. **Interface Améliorée**
+   - Utilisez des LEDs virtuelles
+   - Ajoutez des gauges pour le capteur
+   - Personnalisez les couleurs et le design
+
+## Dépannage
+
+### Problème : "Error -1073807339" (Port COM non trouvé)
+
+**Solution** :
+1. Vérifiez que l'Arduino est connecté
+2. Vérifiez le numéro du port COM
+3. Fermez les autres programmes utilisant le port
+
+### Problème : Pas de réponse de l'Arduino
+
+**Solution** :
+1. Vérifiez le baud rate (doit être 9600)
+2. Vérifiez que le code Arduino est téléversé
+3. Ouvrez le moniteur série Arduino pour tester
+
+### Problème : Données corrompues
+
+**Solution** :
+1. Ajoutez un délai après VISA Write (10-50 ms)
+2. Augmentez le timeout de VISA Read
+3. Videz le buffer avant chaque lecture
+
+## Ressources
+
+- [NI-VISA Documentation](http://www.ni.com/visa/)
+- [LabVIEW 2015 Help](http://zone.ni.com/reference/en-XX/help/371361M-01/)
+- Template du diagramme : `BLOCK_DIAGRAM_TEMPLATE.md`
+
+## Notes Importantes
+
+⚠️ **Compatibilité** : Ce VI est conçu pour LabVIEW 2015. Si vous utilisez une version plus récente, le VI fonctionnera, mais si vous utilisez une version antérieure, vous devrez recréer le VI.
+
+⚠️ **Port Série** : Assurez-vous de fermer correctement la connexion VISA pour éviter de bloquer le port.
+
+⚠️ **Permissions Linux** : Sur Linux, vous devez avoir les permissions pour accéder au port série.
