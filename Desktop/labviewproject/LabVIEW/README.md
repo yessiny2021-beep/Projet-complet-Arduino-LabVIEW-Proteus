@@ -1,5 +1,45 @@
 # Dossier LabVIEW 2015
 
+## 📊 Diagrammes Disponibles
+
+### 🎯 Documentation LED + Capteur (Protocole Simplifié)
+
+**Nouveau!** Documentation complète pour le protocole simplifié LED + Capteur (L1, L0, R, S):
+
+- **[BLOCK_DIAGRAM_LED_SENSOR.md](BLOCK_DIAGRAM_LED_SENSOR.md)** - Diagramme de blocs détaillé en ASCII art
+  - Architecture complète du VI
+  - Section INIT avec configuration VISA
+  - Event Structure avec 5 cas (LED ON, LED OFF, Read Sensor, Get Status, Timeout)
+  - Exemples de parsing avec "Scan From String"
+  - Gestion des erreurs
+  - Flux des données
+
+- **[diagrams/labview_block_diagram_led_sensor.svg](diagrams/labview_block_diagram_led_sensor.svg)** - Diagramme visuel professionnel
+  - Style LabVIEW authentique avec couleurs standards
+  - Représentation graphique de toute l'architecture
+  - Légende avec les commandes et réponses
+
+- **[IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)** - Guide d'implémentation pas-à-pas
+  - Instructions détaillées pour créer le VI dans LabVIEW 2015
+  - Configuration VISA complète
+  - Création de l'Event Structure
+  - Code de parsing pour chaque type de réponse
+  - Tests et validation
+  - Dépannage et optimisations
+
+**📝 Note importante**: Cette documentation correspond **exactement** au protocole Arduino actuel:
+- **Commandes**: L1 (LED ON), L0 (LED OFF), R (Read Sensor), S (Get Status)
+- **Réponses**: LED:ON, LED:OFF, SENSOR:xxxx, STATUS:LED=x,SENSOR=yyyy
+- **Configuration**: 9600 bauds, 8 data bits, 1 stop bit, no parity, termination \n
+- **Pas de SERVO, pas de BUZZER** - uniquement LED + Capteur
+
+### 🔗 Protocole de Communication
+
+Pour les détails complets du protocole série, consultez:
+- [../Documentation/PROTOCOLE_COMMUNICATION.md](../Documentation/PROTOCOLE_COMMUNICATION.md)
+
+---
+
 ## 📁 Structure du Dossier
 
 ```
@@ -7,6 +47,12 @@ LabVIEW/
 ├── README.md                          # Ce fichier
 ├── INSTRUCTIONS_LABVIEW.md            # Guide de création du VI
 ├── BLOCK_DIAGRAM_TEMPLATE.md          # Template du diagramme
+│
+├── BLOCK_DIAGRAM_LED_SENSOR.md        # ✨ Diagramme LED+Capteur détaillé (ASCII art)
+├── IMPLEMENTATION_GUIDE.md            # ✨ Guide d'implémentation pas-à-pas
+│
+├── diagrams/                          # ✨ Diagrammes visuels
+│   └── labview_block_diagram_led_sensor.svg  # Diagramme SVG professionnel
 │
 ├── VIs/                               # 👈 CRÉER CE DOSSIER et placer vos fichiers .vi ici
 │   ├── Arduino_Communication.vi       # VI principal
